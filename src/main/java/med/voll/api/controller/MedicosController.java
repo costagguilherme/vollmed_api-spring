@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import med.voll.api.dtos.MedicoDto;
 import med.voll.api.models.Medico;
 import med.voll.api.models.interfaces.IMedicoRepository;
@@ -20,7 +21,7 @@ public class MedicosController {
 
     @PostMapping
     @Transactional
-    public String create(@RequestBody MedicoDto data) {
+    public String create(@RequestBody @Valid MedicoDto data) {
         Medico medico = new Medico(data);
         this.medicoRepository.save(medico);
         System.out.println(data);
