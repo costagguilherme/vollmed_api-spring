@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.dtos.MedicoDto;
@@ -26,7 +27,7 @@ import med.voll.api.models.interfaces.IMedicoRepository;
 
 @RestController
 @RequestMapping("/medicos")
-public class MedicosController {
+public class MedicosController extends BaseController {
 
     @Autowired
     private IMedicoRepository medicoRepository;
@@ -56,7 +57,7 @@ public class MedicosController {
         Medico medico = this.medicoRepository.findById(data.id()).orElse(null);
         
         if (medico == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return (ResponseEntity<Medico>) this.errorResponse(HttpStatus.NOT_FOUND, "Médico não encontrado");
         }
 
         medico.update(data);
@@ -73,6 +74,9 @@ public class MedicosController {
         medico.makeInactive();
         this.medicoRepository.save(medico);
     }
+
+
+    
     
 
 }
