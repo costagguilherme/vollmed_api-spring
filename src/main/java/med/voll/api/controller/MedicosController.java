@@ -1,7 +1,10 @@
 package med.voll.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import med.voll.api.dtos.MedicoDto;
+import med.voll.api.dtos.MedicoGetResponseDto;
 import med.voll.api.models.Medico;
 import med.voll.api.models.interfaces.IMedicoRepository;
 
@@ -21,11 +25,20 @@ public class MedicosController {
 
     @PostMapping
     @Transactional
-    public String create(@RequestBody @Valid MedicoDto data) {
+    public Medico create(@RequestBody @Valid MedicoDto data) {
         Medico medico = new Medico(data);
-        this.medicoRepository.save(medico);
-        System.out.println(data);
-        return "Hello Word";
+        return this.medicoRepository.save(medico);
+    }
+
+    @GetMapping
+    public List<MedicoGetResponseDto> get() {
+        List<Medico> medicos = this.medicoRepository.findAll();
+        return medicos.stream().map(medico -> new MedicoGetResponseDto(
+            medico.getNome(),
+            medico.getEmail(),
+            medico.getCrm(),
+            medico.getEspecialidade()
+        )).toList();
     }
 
 }
