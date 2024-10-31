@@ -55,17 +55,24 @@ public class MedicosController extends BaseController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping
-    @Transactional
-    public ResponseEntity<Medico> update(@RequestBody @Valid MedicoPutDto data) {
-        Medico medico = this.medicoRepository.findById(data.id()).orElse(null);
-        
+    @GetMapping("/{id}") 
+    ResponseEntity<Medico> getById(@PathVariable Long id) {
+        Medico medico = this.medicoRepository.findById(id).orElse(null);
         if (medico == null) {
             return (ResponseEntity<Medico>) this.errorResponse(HttpStatus.NOT_FOUND, "Médico não encontrado");
         }
 
-        medico.update(data);
+        return ResponseEntity.ok(medico);
+    }
 
+    @PutMapping
+    @Transactional
+    public ResponseEntity<Medico> update(@RequestBody @Valid MedicoPutDto data) {
+        Medico medico = this.medicoRepository.findById(data.id()).orElse(null);
+        if (medico == null) {
+            return (ResponseEntity<Medico>) this.errorResponse(HttpStatus.NOT_FOUND, "Médico não encontrado");
+        }
+        medico.update(data);
         return ResponseEntity.ok(medico);
     }
 
