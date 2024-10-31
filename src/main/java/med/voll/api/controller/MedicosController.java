@@ -69,10 +69,15 @@ public class MedicosController extends BaseController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Medico> delete(@PathVariable Long id) {
         Medico medico = this.medicoRepository.findById(id).orElse(null);
+        if (medico == null) {
+            return (ResponseEntity<Medico>) this.errorResponse(HttpStatus.NOT_FOUND, "Médico não encontrado");
+        }
         medico.makeInactive();
-        this.medicoRepository.save(medico);
+        Medico deletedMedico = this.medicoRepository.save(medico);
+        return ResponseEntity.ok(deletedMedico);
+
     }
 
 
