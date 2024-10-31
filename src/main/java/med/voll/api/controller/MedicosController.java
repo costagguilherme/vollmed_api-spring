@@ -33,16 +33,17 @@ public class MedicosController extends BaseController {
     private IMedicoRepository medicoRepository;
 
     @PostMapping
-    public Medico create(@RequestBody @Valid MedicoDto data) {
+    public ResponseEntity create(@RequestBody @Valid MedicoDto data) {
         Medico medico = new Medico(data);
-        return this.medicoRepository.save(medico);
+        var savedMedico = this.medicoRepository.save(medico);
+        return ResponseEntity.ok(savedMedico);
     }
 
     @GetMapping
-    public Page<MedicoGetResponseDto> get(@PageableDefault(size=10) Pageable pagination) {
+    public ResponseEntity<Page<MedicoGetResponseDto>> get(@PageableDefault(size=10) Pageable pagination) {
         Page<Medico> medicos = this.medicoRepository.findAllByAtivoTrue(pagination);
         
-        return medicos.map(medico -> new MedicoGetResponseDto(
+        var result = medicos.map(medico -> new MedicoGetResponseDto(
             medico.getId(),
             medico.getNome(),
             medico.getEmail(),
@@ -50,9 +51,12 @@ public class MedicosController extends BaseController {
             medico.getAtivo(),
             medico.getEspecialidade()
         ));
+
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping
+    @Transactional
     public ResponseEntity<Medico> update(@RequestBody @Valid MedicoPutDto data) {
         Medico medico = this.medicoRepository.findById(data.id()).orElse(null);
         
@@ -62,8 +66,7 @@ public class MedicosController extends BaseController {
 
         medico.update(data);
 
-        Medico updatedMedico = this.medicoRepository.save(medico);
-        return ResponseEntity.ok(updatedMedico);
+        return ResponseEntity.ok(medico);
     }
 
 
@@ -75,8 +78,7 @@ public class MedicosController extends BaseController {
             return (ResponseEntity<Medico>) this.errorResponse(HttpStatus.NOT_FOUND, "Médico não encontrado");
         }
         medico.makeInactive();
-        Medico deletedMedico = this.medicoRepository.save(medico);
-        return ResponseEntity.ok(deletedMedico);
+        return ResponseEntity.ok(medico);
 
     }
 
