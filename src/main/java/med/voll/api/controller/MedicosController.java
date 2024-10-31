@@ -1,8 +1,9 @@
 package med.voll.api.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,14 +32,16 @@ public class MedicosController {
     }
 
     @GetMapping
-    public List<MedicoGetResponseDto> get() {
-        List<Medico> medicos = this.medicoRepository.findAll();
-        return medicos.stream().map(medico -> new MedicoGetResponseDto(
+    public Page<MedicoGetResponseDto> get(Pageable pagination) {
+        Page<Medico> medicos = this.medicoRepository.findAll(pagination);
+        
+        return medicos.map(medico -> new MedicoGetResponseDto(
             medico.getNome(),
             medico.getEmail(),
             medico.getCrm(),
             medico.getEspecialidade()
-        )).toList();
+        ));
     }
+    
 
 }
