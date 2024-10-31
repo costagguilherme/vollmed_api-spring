@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.dtos.EnderecoDto;
+import med.voll.api.dtos.MedicoPutDto;
 
 @Embeddable
 @Getter
@@ -27,5 +28,15 @@ public class Endereco {
         this.complemento = data.complemento();
         this.cidade = data.cidade();
         this.uf = data.uf();
+    }
+
+    public void update(EnderecoDto data) {
+        this.logradouro = data.logradouro() != null ? data.logradouro() : this.logradouro;
+        this.bairro = data.bairro() != null ? data.bairro() : this.bairro;
+        this.cep = data.cep() != null ? data.cep() : this.cep;
+        this.numero = data.numero() != null ? data.numero() : this.numero;
+        this.complemento = data.complemento() != null ? data.complemento() : this.complemento;
+        this.cidade = data.cidade() != null ? data.cidade() : this.cidade;
+        this.uf = data.uf() != null ? data.uf() : this.uf;
     }
 }

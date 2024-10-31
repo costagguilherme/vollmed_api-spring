@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.dtos.MedicoDto;
+import med.voll.api.dtos.MedicoPutDto;
 import med.voll.api.enums.EspecialidadeEnum;
 
 
@@ -22,6 +23,7 @@ public class Medico {
     private String email;
     private String telefone;
     private String crm;
+    private Boolean ativo;
 
     @Enumerated(EnumType.STRING)
     private EspecialidadeEnum especialidade;
@@ -34,7 +36,22 @@ public class Medico {
         this.email = data.email();
         this.telefone = data.telefone();
         this.crm = data.crm();
+        this.ativo = true;
         this.especialidade = data.especialidade();
         this.endereco = new Endereco(data.endereco());
+    }
+
+    public Endereco getEndereco() {
+        return this.endereco;
+    }
+
+    public void update(MedicoPutDto data) {
+        this.nome = data.nome() != null ? data.nome() : this.nome;
+        this.telefone = data.telefone() != null ? data.telefone() : this.telefone;
+        this.endereco.update(data.endereco());
+    }
+
+    public void makeInactive() {
+        this.ativo = false;
     }
 }
