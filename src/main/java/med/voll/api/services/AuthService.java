@@ -15,8 +15,9 @@ public class AuthService implements UserDetailsService {
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
-    @Override
+    @Override // Chamado pelo AuthenticationManager
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println(username);
         return this.usuarioRepository.findByLogin(username);
     }
     
