@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.micrometer.common.lang.Nullable;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.dtos.MedicoDto;
