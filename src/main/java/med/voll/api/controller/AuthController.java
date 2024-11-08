@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import med.voll.api.dtos.AuthDto;
+import med.voll.api.models.Usuario;
+import med.voll.api.services.TokenService;
 
 @RestController
 @RequestMapping("/login")
@@ -19,11 +21,15 @@ public class AuthController {
     @Autowired
     private AuthenticationManager manager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid AuthDto data) {
 
         var token = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
         var authentication = manager.authenticate(token); // Chama AuthService
-        return ResponseEntity.ok().build();
+        var tokenJwt = tokenService.generateToken((Usuario) authentication.getPrincipal());
+        return ResponseEntity.ok().body(tokenJwt);
     }
 }
